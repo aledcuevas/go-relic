@@ -23,7 +23,7 @@ func ep2Rand(point *C.ep2_st) {
 	C.ep2_rand(point)
 }
 
-func ep22IsValid(point *C.ep2_st) C.int {
+func ep2IsValid(point *C.ep2_st) C.int {
 	return C.ep2_is_valid(point)
 }
 

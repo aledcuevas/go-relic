@@ -6,9 +6,11 @@ import "C"
 func coreInit() int {
 	if C.core_init() != C.STS_OK {
 		C.core_clean()
-		return 1 // Error
+		// Error
+		return 1
 	}
-	return 0 // Correct (STS_OK)
+	// Correct (STS_OK)
+	return 0
 }
 
 func coreClean() {
@@ -18,6 +20,6 @@ func coreClean() {
 func paramSet() {
 	if C.ep_param_set_any() != C.STS_OK {
 		C.core_clean()
-		panic("no curve supported at this security level")
+		panic(MsgNoCurve)
 	}
 }

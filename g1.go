@@ -25,6 +25,7 @@ type ellPointG1 struct {
 // ******* G1 METHODS *******
 
 // // Initialization and Free
+
 func freeG1(g1 *C.ep_st) {
 	C.g1_free_w(g1)
 }
