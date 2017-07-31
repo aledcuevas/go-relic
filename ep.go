@@ -65,6 +65,17 @@ func epAddBasic(result *C.ep_st, point1 *C.ep_st, point2 *C.ep_st) {
 
 // // Negation
 
+/*g1_neg -> ep_neg -> ep_neg_basic*/
 func epNegBasic(result *C.ep_st, point *C.ep_st) {
 	C.ep_neg_basic(result, point)
+}
+
+// // Other Operations
+
+func epDbl(result *C.ep_st, point *C.ep_st) {
+	C.ep_dbl_basic(result, point)
+}
+
+func epNorm(result *C.ep_st, point *C.ep_st) {
+	C.ep_norm(result, point)
 }
