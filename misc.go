@@ -54,4 +54,7 @@ const (
 	RelicOptNone = 5
 	// MaxTerms Maximum number of terms to describe a sparse object.
 	MaxTerms = 16
+
+	// PcBytes (TEMPORARY) represents the size of bytes of a block sufficient to store a binary field element. Will later be migrated to goCore
+	PcBytes = int(C.FP_BYTES)
 )

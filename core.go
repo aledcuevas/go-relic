@@ -43,6 +43,12 @@ func gToCflag(i int) C.int {
 	}
 }
 
+type goCore struct {
+	pcBytes   int
+	goArch    int
+	relicArch int
+}
+
 func setGoParameters() {
 
 }

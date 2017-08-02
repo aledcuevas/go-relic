@@ -76,7 +76,7 @@ func epSizeBin(point *C.ep_st, pack int32) int32 {
 	return int32(size)
 }
 
-func epReadBin(result *C.ep_st, bin []byte, len int) {
+func epReadBin(rPoint *C.ep_st, bin []byte, len int32) {
 	/* Go []byte slice to C array -- returns an unsafe.Pointer */
 	b := C.CBytes(bin)
 	defer C.free(b)
@@ -89,10 +89,10 @@ func epReadBin(result *C.ep_st, bin []byte, len int) {
 	//defer C.free(unsafe.Pointer(&b))
 	l := C.int(len)
 
-	C.ep_read_bin(result, (*C.uint8_t)(b), l)
+	C.ep_read_bin(rPoint, (*C.uint8_t)(b), l)
 }
 
-func epWriteBin(result []byte, len int32, point *C.ep_st, pack int32) {
+func epWriteBin(rBin []byte, len int32, point *C.ep_st, pack int32) {
 	p := C.int(pack)
 	l := C.int(len)
 	//Type conversion from int32 to size_t not thoroughly tested
@@ -101,6 +101,10 @@ func epWriteBin(result []byte, len int32, point *C.ep_st, pack int32) {
 	defer C.free(addr)
 
 	C.ep_write_bin((*C.uint8_t)(addr), l, point, p)
+
+	//TODO fix this assignment
+	rBin = C.GoBytes(addr, l)
+
 }
 
 /*** CODE ABOVE NEEDS STRONG REVIEW ***/

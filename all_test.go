@@ -30,6 +30,10 @@ func TestUtil1(t *testing.T) {
 	b := new(ellPointG1)
 	c := new(ellPointG1)
 
+	//l, code := StsErr, StsErr
+	binSize := 2*PcBytes + 1
+	bin := make([]byte, binSize, binSize)
+
 	nullG1(&a.g1)
 	nullG1(&b.g1)
 	nullG1(&c.g1)
@@ -126,6 +130,42 @@ func TestUtil1(t *testing.T) {
 
 	testBegin("reading and writing a point are consistent")
 	for j := 0; j < 2; j++ {
+		j := int32(j)
 		epSetInfinity(&a.g1)
+		l := epSizeBin(&a.g1, j)
+		epWriteBin(bin, l, &a.g1, j)
+		epReadBin(&b.g1, bin, l)
+
+		if epCmp(&a.g1, &b.g1) == CmpEq {
+			passed()
+		} else {
+			failed()
+		}
+
+		epRand(&a.g1)
+		l = epSizeBin(&a.g1, j)
+		epWriteBin(bin, l, &a.g1, j)
+		epReadBin(&b.g1, bin, j)
+
+		if epCmp(&a.g1, &b.g1) == CmpEq {
+			passed()
+		} else {
+			failed()
+		}
+
+		epRand(&a.g1)
+		epDbl(&a.g1, &a.g1)
+		l = epSizeBin(&a.g1, j)
+		epNorm(&a.g1, &a.g1)
+		epWriteBin(bin, l, &a.g1, j)
+		epReadBin(&b.g1, bin, l)
+
+		//TODO: ineffectual buffer capacity in ep_read_bin
+		if epCmp(&a.g1, &b.g1) == CmpEq {
+			passed()
+		} else {
+			failed()
+		}
+
 	}
 }
