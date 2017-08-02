@@ -1,6 +1,10 @@
 package main
 
 // #include<relic.h>
+/*
+#define ZERO_C	0
+#define ONE_C		1
+*/
 import "C"
 
 const (
