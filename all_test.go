@@ -139,12 +139,12 @@ func TestUtil1(t *testing.T) {
 	}
 
 	testBegin("reading and writing a point are consistent")
-	for j := 0; j < 2; j++ {
-		j := int32(j)
-		epSetInfinity(&a.g1)
-		l := epSizeBin(&a.g1, j)
-		epWriteBin(bin, l, &a.g1, j)
-		epReadBin(&b.g1, bin, l)
+	for i := 0; i < 2; i++ {
+		j := int32(i)
+		epSetInfinity(&a.g1)         //set a infinity
+		l := epSizeBin(&a.g1, j)     //size of a
+		epWriteBin(bin, l, &a.g1, j) //write a to bin
+		epReadBin(&b.g1, bin, l)     //read bin to b - read is successful with infinite curve
 
 		if epCmp(&a.g1, &b.g1) == CmpEq {
 			passed()
@@ -152,11 +152,10 @@ func TestUtil1(t *testing.T) {
 			failed()
 		}
 
-		epRand(&a.g1)
-		l = epSizeBin(&a.g1, j)
-		epWriteBin(bin, l, &a.g1, j)
-		//TODO: insufficient buffer capacity in ep_read_bin
-		epReadBin(&b.g1, bin, j)
+		epRand(&a.g1)                //randomize a
+		l = epSizeBin(&a.g1, j)      //size of a
+		epWriteBin(bin, l, &a.g1, j) //write a to bin
+		epReadBin(&b.g1, bin, l)     //read bin to b
 
 		if epCmp(&a.g1, &b.g1) == CmpEq {
 			passed()
@@ -168,7 +167,6 @@ func TestUtil1(t *testing.T) {
 		epDbl(&a.g1, &a.g1)
 		l = epSizeBin(&a.g1, j)
 		epNorm(&a.g1, &a.g1)
-		//crashes here
 		epWriteBin(bin, l, &a.g1, j)
 		epReadBin(&b.g1, bin, l)
 

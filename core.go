@@ -44,7 +44,6 @@ func coreClean() int {
 func epParamSetAny() int {
 	if C.ep_param_set_any() != C.STS_OK {
 		C.core_clean()
-		panic(MsgNoCurve)
 		return StsErr
 	}
 	return StsOk

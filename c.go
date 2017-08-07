@@ -13,7 +13,7 @@ import "C"
 * Thus far, this library has been written, configured, and tested with the factory defaults, on an OSX 64-bit machine.
 * NOTE: It is very important to keep the following table as reference:
 
-if FP_PRIME < 1536
+if FP_PRIME < 1536 (default is 256, from fp.cmake)
  G1_LOWER ep_
  G1_UPPER EP
  G2_LOWER ep2_

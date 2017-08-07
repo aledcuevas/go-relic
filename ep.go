@@ -2,6 +2,7 @@ package main
 
 // #include <relic.h>
 // #include <stdint.h>
+// #include <stdlib.h>
 /*
 #define ZERO_C	0
 #define ONE_C		1
@@ -87,18 +88,13 @@ func epSizeBin(point *C.ep_st, pack int32) int32 {
 
 //EpReadBin reads a prime elliptic curve point from a byte vector in big-endian format.
 func epReadBin(rPoint *C.ep_st, bin []byte, len int32) {
-	/* Go []byte slice to C array -- returns an unsafe.Pointer */
+	l := C.int(len)
+	//Go []byte slice to C array -- returns an unsafe.Pointer
+	//RELIC uses a uint8 array to represent a byte array. Therefore, we will take
+	//a byte slice, convert it to a C array, cast it to have the right signature,
+	//and pass a pointer to it.
 	b := C.CBytes(bin)
 	defer C.free(b)
-	/* We need to match the uint8_t signature in ep_read_bin. we cast tmp to
-	a char* and copy the bytes directly to a malloc'd block. we return the address
-	of this block of memory with the right signature. Note: the casting of
-	uint to C.int has not yet been thoroughly tested.
-	*/
-	//b := C.btou8((*C.char)(unsafe.Pointer(&tmp)), (C.int)(unsafe.Sizeof(tmp)))
-	//defer C.free(unsafe.Pointer(&b))
-	l := C.int(len)
-
 	C.ep_read_bin(rPoint, (*C.uint8_t)(b), l)
 }
 
@@ -106,15 +102,14 @@ func epReadBin(rPoint *C.ep_st, bin []byte, len int32) {
 func epWriteBin(rBin []byte, len int32, point *C.ep_st, pack int32) {
 	p := C.int(pack)
 	l := C.int(len)
-	//Type conversion from int32 to size_t not thoroughly tested
-	lun := C.size_t(len)
-	addr := C.malloc(lun)
-	defer C.free(addr)
-
-	C.ep_write_bin((*C.uint8_t)(addr), l, point, p)
-
-	//TODO check if getting copied correctly
-	rBin = C.GoBytes(addr, l)
+	//We obtain a C array allocated in the C heap using rBin. CBytes returns an unsafe.Pointer
+	b := C.CBytes(rBin)
+	defer C.free(b)
+	//We perform the write operation on the C array, which has to be casted to match the signature
+	C.ep_write_bin((*C.uint8_t)(b), l, point, p)
+	//We transform the unsafe.Pointer back to a []byte
+	//GoBytes takes C data with explicity length and returns Go []byte
+	copy(rBin, C.GoBytes(b, l))
 
 }
 
