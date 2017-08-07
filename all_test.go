@@ -1,6 +1,16 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
+
+/***
+ * List of tests given by RELIC but re-implemented using the Go methods.
+ * Test files in Go can't utilize Cgo.
+ * The following tests were taken from test_pc.c, a test suite for pairing crypto.
+ * NOTE: The if/else statements are ugly but did the job.
+ ***/
 
 func ShortTest(t *testing.T) {
 
@@ -13,7 +23,7 @@ func LongTest(t *testing.T) {
 func TestMemory1(t *testing.T) {
 	testBegin("memory can be allocated")
 	coreInit()
-	paramSet()
+	epParamSetAny()
 	defer coreClean()
 	a := new(ellPointG1)
 	nullG1(&a.g1)
@@ -24,7 +34,7 @@ func TestMemory1(t *testing.T) {
 func TestUtil1(t *testing.T) {
 	testBegin("comparison is consistent")
 	coreInit()
-	paramSet()
+	epParamSetAny()
 	defer coreClean()
 	a := new(ellPointG1)
 	b := new(ellPointG1)
@@ -145,6 +155,7 @@ func TestUtil1(t *testing.T) {
 		epRand(&a.g1)
 		l = epSizeBin(&a.g1, j)
 		epWriteBin(bin, l, &a.g1, j)
+		//TODO: insufficient buffer capacity in ep_read_bin
 		epReadBin(&b.g1, bin, j)
 
 		if epCmp(&a.g1, &b.g1) == CmpEq {
@@ -157,10 +168,10 @@ func TestUtil1(t *testing.T) {
 		epDbl(&a.g1, &a.g1)
 		l = epSizeBin(&a.g1, j)
 		epNorm(&a.g1, &a.g1)
+		//crashes here
 		epWriteBin(bin, l, &a.g1, j)
 		epReadBin(&b.g1, bin, l)
 
-		//TODO: ineffectual buffer capacity in ep_read_bin
 		if epCmp(&a.g1, &b.g1) == CmpEq {
 			passed()
 		} else {
@@ -168,4 +179,17 @@ func TestUtil1(t *testing.T) {
 		}
 
 	}
+}
+
+// *** SUPPLEMENTARY FUNCTIONS ***
+
+func testBegin(s string) {
+	fmt.Printf("Testing if %v\n", s)
+}
+
+func passed() {
+	fmt.Println("-PASS-")
+}
+func failed() {
+	fmt.Println("-FAIL-")
 }

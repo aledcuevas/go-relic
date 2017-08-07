@@ -3,6 +3,8 @@ package main
 // #include <relic.h>
 // #include <stdint.h>
 /*
+#define ZERO_C	0
+#define ONE_C		1
 uint8_t* btou8(char* b, int size){
 	uint8_t* r = malloc(size);
 	memcpy(r, b, size);
@@ -13,8 +15,9 @@ import "C"
 
 // ******* GENERAL METHODS *******
 
-// // Utils
+// // Utils - relic_ep_util.c
 
+//EpCmp compares two prime elliptic curve points. Returns eq/neq.
 func epCmp(point1 *C.ep_st, point2 *C.ep_st) int {
 	var result int
 	switch C.ep_cmp(point1, point2) {
@@ -26,26 +29,29 @@ func epCmp(point1 *C.ep_st, point2 *C.ep_st) int {
 	return result
 }
 
+//EpSetInfinity assigns a prime elliptic curve point at the infinity.
 func epSetInfinity(point *C.ep_st) {
 	C.ep_set_infty(point)
 }
 
+//EpIsInfinity tests if a point on a prime elliptic curve is at the infinity. Returns true/false.
 func epIsInfinity(point *C.ep_st) bool {
 	var result bool
-	/* CMP_GT and CMP_EQ are used because they are constants in the RELIC library that represent '1' and '0', respectively.*/
 	switch C.ep_is_infty(point) {
-	case C.CMP_GT:
+	case C.ONE_C:
 		result = true
-	case C.CMP_EQ:
+	case C.ZERO_C:
 		result = false
 	}
 	return result
 }
 
+//EpRand assigns a random value to a prime elliptic curve point.
 func epRand(point *C.ep_st) {
 	C.ep_rand(point)
 }
 
+//EpIsValid tests if a point is in the curve. Returns true/false.
 func epIsValid(point *C.ep_st) bool {
 	var result bool
 	switch C.ep_is_valid(point) {
@@ -57,10 +63,12 @@ func epIsValid(point *C.ep_st) bool {
 	return result
 }
 
+//EpPrint prints a prime elliptic curve point.
 func epPrint(point *C.ep_st) {
 	C.ep_print(point)
 }
 
+//EpCopy copies the second argument to the first argument.
 func epCopy(to *C.ep_st, from *C.ep_st) {
 	C.ep_copy(to, from)
 }
@@ -70,12 +78,14 @@ func epCopy(to *C.ep_st, from *C.ep_st) {
 /*
  * epSizeBin returns the size of a point with or without compression (pack). It is not desirable to expose C types in Go function returns. However, due to the lack of a conversion function, it is advised to take the result and "plug" it in subsequent function calls as necessary.
  */
+//EpSizeBin returns the number of bytes necessary to store a prime elliptic curve point with optional point compression.
 func epSizeBin(point *C.ep_st, pack int32) int32 {
 	p := C.int(pack)
 	size := C.ep_size_bin(point, p)
 	return int32(size)
 }
 
+//EpReadBin reads a prime elliptic curve point from a byte vector in big-endian format.
 func epReadBin(rPoint *C.ep_st, bin []byte, len int32) {
 	/* Go []byte slice to C array -- returns an unsafe.Pointer */
 	b := C.CBytes(bin)
@@ -92,6 +102,7 @@ func epReadBin(rPoint *C.ep_st, bin []byte, len int32) {
 	C.ep_read_bin(rPoint, (*C.uint8_t)(b), l)
 }
 
+//EpWriteBin writes a prime elliptic curve point to a byte vector in bid-endian format with optional point compression.
 func epWriteBin(rBin []byte, len int32, point *C.ep_st, pack int32) {
 	p := C.int(pack)
 	l := C.int(len)
@@ -102,31 +113,37 @@ func epWriteBin(rBin []byte, len int32, point *C.ep_st, pack int32) {
 
 	C.ep_write_bin((*C.uint8_t)(addr), l, point, p)
 
-	//TODO fix this assignment
+	//TODO check if getting copied correctly
 	rBin = C.GoBytes(addr, l)
 
 }
 
 /*** CODE ABOVE NEEDS STRONG REVIEW ***/
-// // Addition
+
+// // Addition - relic_ep_add.c
 
 func epAddBasic(result *C.ep_st, point1 *C.ep_st, point2 *C.ep_st) {
 	C.ep_add_basic(result, point1, point2)
 }
 
-// // Negation
+// // Negation - relic_ep_neg.c
 
-/*g1_neg -> ep_neg -> ep_neg_basic*/
+//EpNegBasic negates a prime elliptic curve point represented by affine coordinates.
 func epNegBasic(result *C.ep_st, point *C.ep_st) {
+	/*gX_neg -> epX_neg -> epX_neg_basic*/
 	C.ep_neg_basic(result, point)
 }
 
-// // Other Operations
+// // Double - relic_ep_dbl.c
 
+//EpDbl doubles a prime elliptic curve point represented in affine coordinates.
 func epDbl(result *C.ep_st, point *C.ep_st) {
 	C.ep_dbl_basic(result, point)
 }
 
+// // Normalizaction - relic_ep_norm.c
+
+//EpNorm converts a point to affine coordinates.
 func epNorm(result *C.ep_st, point *C.ep_st) {
 	C.ep_norm(result, point)
 }

@@ -3,6 +3,12 @@ package main
 // #include<relic.h>
 import "C"
 
+/***
+ * List of useful constants.
+ * Msgs found in relic_err.h
+ * RELIC constants in relic_core.h
+ ***/
+
 const (
 	//TRUE const to check against C functions that return int
 	TRUE = 0

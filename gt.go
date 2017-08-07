@@ -22,7 +22,7 @@ type ellPointGT struct {
 	gt C.fp12_t
 }
 
-// ******* G1 METHODS *******
+// ******* GT METHODS *******
 
 // // Initialization and Free
 
