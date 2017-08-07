@@ -6,7 +6,7 @@ import (
 )
 
 /***
- * List of tests given by RELIC but re-implemented using the Go methods.
+ * List of tests given by RELt.Fail()IC but re-implemented using the Go methods.
  * Test files in Go can't utilize Cgo.
  * The following tests were taken from test_pc.c, a test suite for pairing crypto.
  * NOTE: The if/else statements are ugly but did the job.
@@ -52,6 +52,10 @@ func TestUtil1(t *testing.T) {
 	newG1(&b.g1)
 	newG1(&c.g1)
 
+	defer freeG1(&a.g1)
+	defer freeG1(&b.g1)
+	defer freeG1(&c.g1)
+
 	randG1(&a.g1)
 	randG1(&b.g1)
 
@@ -59,6 +63,7 @@ func TestUtil1(t *testing.T) {
 		passed()
 	} else {
 		failed()
+		t.Fail()
 	}
 
 	testBegin("copy and comparison are consistent")
@@ -70,6 +75,7 @@ func TestUtil1(t *testing.T) {
 			passed()
 		} else {
 			failed()
+			t.Fail()
 		}
 	}
 	if epCmp(&b.g1, &c.g1) == CmpNe {
@@ -78,6 +84,7 @@ func TestUtil1(t *testing.T) {
 			passed()
 		} else {
 			failed()
+			t.Fail()
 		}
 	}
 
@@ -89,11 +96,13 @@ func TestUtil1(t *testing.T) {
 		passed()
 	} else {
 		failed()
+		t.Fail()
 	}
 	if epCmp(&a.g1, &c.g1) == CmpEq {
 		passed()
 	} else {
 		failed()
+		t.Fail()
 	}
 
 	epDbl(&c.g1, &c.g1)
@@ -102,6 +111,7 @@ func TestUtil1(t *testing.T) {
 		passed()
 	} else {
 		failed()
+		t.Fail()
 	}
 
 	testBegin("inversion and comparison are consistent")
@@ -112,6 +122,7 @@ func TestUtil1(t *testing.T) {
 		passed()
 	} else {
 		failed()
+		t.Fail()
 	}
 
 	testBegin("assignment to random/infinity and comparison are consistent")
@@ -122,11 +133,13 @@ func TestUtil1(t *testing.T) {
 		passed()
 	} else {
 		failed()
+		t.Fail()
 	}
 	if epCmp(&c.g1, &a.g1) != CmpEq {
 		passed()
 	} else {
 		failed()
+		t.Fail()
 	}
 
 	testBegin("assignment to infinity and infinity test are consistent")
@@ -136,31 +149,34 @@ func TestUtil1(t *testing.T) {
 		passed()
 	} else {
 		failed()
+		t.Fail()
 	}
 
 	testBegin("reading and writing a point are consistent")
 	for i := 0; i < 2; i++ {
 		j := int32(i)
-		epSetInfinity(&a.g1)         //set a infinity
-		l := epSizeBin(&a.g1, j)     //size of a
-		epWriteBin(bin, l, &a.g1, j) //write a to bin
-		epReadBin(&b.g1, bin, l)     //read bin to b - read is successful with infinite curve
+		epSetInfinity(&a.g1)
+		l := epSizeBin(&a.g1, j)
+		epWriteBin(bin, l, &a.g1, j)
+		epReadBin(&b.g1, bin, l)
 
 		if epCmp(&a.g1, &b.g1) == CmpEq {
 			passed()
 		} else {
 			failed()
+			t.Fail()
 		}
 
-		epRand(&a.g1)                //randomize a
-		l = epSizeBin(&a.g1, j)      //size of a
-		epWriteBin(bin, l, &a.g1, j) //write a to bin
-		epReadBin(&b.g1, bin, l)     //read bin to b
+		epRand(&a.g1)
+		l = epSizeBin(&a.g1, j)
+		epWriteBin(bin, l, &a.g1, j)
+		epReadBin(&b.g1, bin, l)
 
 		if epCmp(&a.g1, &b.g1) == CmpEq {
 			passed()
 		} else {
 			failed()
+			t.Fail()
 		}
 
 		epRand(&a.g1)
@@ -174,6 +190,7 @@ func TestUtil1(t *testing.T) {
 			passed()
 		} else {
 			failed()
+			t.Fail()
 		}
 
 	}

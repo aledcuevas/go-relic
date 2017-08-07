@@ -136,7 +136,7 @@ func epDbl(result *C.ep_st, point *C.ep_st) {
 	C.ep_dbl_basic(result, point)
 }
 
-// // Normalizaction - relic_ep_norm.c
+// // Normalization - relic_ep_norm.c
 
 //EpNorm converts a point to affine coordinates.
 func epNorm(result *C.ep_st, point *C.ep_st) {
