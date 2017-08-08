@@ -6,7 +6,6 @@ package main
 #define ONE_C		1
 */
 import "C"
-import "errors"
 
 /***
  * core.go contains the set of functions required to instantiate the library.
@@ -49,21 +48,7 @@ func epParamSetAny() int {
 	return StsOk
 }
 
-// *** UNDER CONSTRUCTION || FOR TEST PURPOSES ***
-
-/*
- * gToCflag is used to convert Go ints to C.ints, but only limited to 0 and 1. This is necessary because RELIC uses 1 and 0 as flags for many functions. Furthermore, a general conversion function is desirable but left for future work.
- */
-func gToCflag(i int) C.int {
-	switch i {
-	case 0:
-		return C.ZERO_C
-	case 1:
-		return C.ONE_C
-	default:
-		panic("bad conversion")
-	}
-}
+// *** TODO: Create an object that centralizes fields from ctx_t (e.g. arch, size of prime fields, etc.)***
 
 type goCore struct {
 	pcBytes   int
@@ -72,39 +57,5 @@ type goCore struct {
 }
 
 func setGoParameters() {
-
+	//TODO
 }
-
-func cArch() (int, error) {
-	s := C.sizeof_int
-	switch s {
-	case 2:
-		return 2, nil
-	case 4:
-		return 4, nil
-	case 8:
-		return 8, nil
-	default:
-		return 0, errors.New("wrong conversion")
-	}
-}
-
-func gToC(ar int) (C.int, error) {
-	switch ar {
-	case 2:
-		return 2, nil
-	case 4:
-		return 4, nil
-	case 8:
-		return 8, nil
-	default:
-		return 0, errors.New("architecture not recognized")
-	}
-}
-
-//Initialize a struct?
-//Save parameters in a struct
-//func to set RELIC architecture parameters
-// 		include values for curves to be used
-// 		include prime lengths and stuff
-//		alter any existing if defs

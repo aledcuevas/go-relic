@@ -3,7 +3,7 @@ package main
 // #include <relic.h>
 import "C"
 
-// ******* AWAITING G1 IMPLEMENTATION *******
+// ******* TODO: AWAITING G1 IMPLEMENTATION *******
 
 // // Utils
 

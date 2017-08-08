@@ -6,7 +6,7 @@ import (
 )
 
 /***
- * List of tests given by RELt.Fail()IC but re-implemented using the Go methods.
+ * List of tests given by RELIC but re-implemented using the Go methods.
  * Test files in Go can't utilize Cgo.
  * The following tests were taken from test_pc.c, a test suite for pairing crypto.
  * NOTE: The if/else statements are ugly but did the job.

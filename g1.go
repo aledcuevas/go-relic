@@ -2,16 +2,6 @@ package main
 
 // #include <relic.h>
 /*
-void initialize_g1(ep_st* g1){
-		TRY {
-		g1_null(g1);
-		g1_new(g1);
-	} CATCH_ANY {
-		//THROW(ERR_CAUGHT);
-	} FINALLY {
-
-	}
-}
 void g1_free_w(ep_st* g1){
   g1_free(g1);
 }
@@ -49,8 +39,4 @@ func randG1(g1 *C.ep_st) {
 
 func newG1(g1 *C.ep_st) {
 	C.g1_new_w(g1)
-}
-
-func initG1(g1Strct *ellPointG1) {
-	C.initialize_g1(&g1Strct.g1)
 }

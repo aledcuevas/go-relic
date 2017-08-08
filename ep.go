@@ -6,15 +6,8 @@ package main
 /*
 #define ZERO_C	0
 #define ONE_C		1
-uint8_t* btou8(char* b, int size){
-	uint8_t* r = malloc(size);
-	memcpy(r, b, size);
-	return &r[0];
-}
 */
 import "C"
-
-// ******* GENERAL METHODS *******
 
 // // Utils - relic_ep_util.c
 
@@ -129,7 +122,7 @@ func epNegBasic(result *C.ep_st, point *C.ep_st) {
 	C.ep_neg_basic(result, point)
 }
 
-// // Double - relic_ep_dbl.c
+// // Doubling - relic_ep_dbl.c
 
 //EpDbl doubles a prime elliptic curve point represented in affine coordinates.
 func epDbl(result *C.ep_st, point *C.ep_st) {
