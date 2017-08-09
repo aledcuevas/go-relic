@@ -9,6 +9,10 @@ package main
 */
 import "C"
 
+func init() {
+
+}
+
 // // Utils - relic_ep_util.c
 
 //EpCmp compares two prime elliptic curve points. Returns eq/neq.
