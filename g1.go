@@ -14,14 +14,13 @@ void g1_new_w(ep_st* g1){
 */
 import "C"
 
-type ellPointG1 struct {
-	g1    C.ep_st
-	lower string
-	upper string
-	curve string
-}
-
 // ******* G1 METHODS *******
+
+type pointG1 struct {
+	g1    C.ep_st
+	lower int
+	upper int
+}
 
 // // Initialization and Free
 

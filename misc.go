@@ -63,4 +63,12 @@ const (
 
 	// PcBytes (TEMPORARY) represents the size of bytes of a block sufficient to store a binary field element. Will later be migrated to goCore
 	PcBytes = int(C.FP_BYTES)
+	FpPrime = int(C.FP_PRIME)
+
+	Cep   = 0
+	Cep2  = 1
+	CEP   = 2
+	Cfp12 = 3
+	Cfp2  = 4
+	Cpp   = 5
 )
