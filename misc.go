@@ -63,6 +63,7 @@ const (
 
 	// PcBytes (TEMPORARY) represents the size of bytes of a block sufficient to store a binary field element. Will later be migrated to goCore
 	PcBytes = int(C.FP_BYTES)
+	//FpPrime represent the bit size of the prime used in the curve
 	FpPrime = int(C.FP_PRIME)
 
 	Cep   = 0
