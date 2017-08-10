@@ -63,4 +63,33 @@ const (
 
 	// PcBytes (TEMPORARY) represents the size of bytes of a block sufficient to store a binary field element. Will later be migrated to goCore
 	PcBytes = int(C.FP_BYTES)
+	//CurveFp254BNb ...
+	CurveFp254BNb = int(C.BN_P254)
+	//CurveFp382_1 ...
+	CurveFp382_1 = int(C.BN_P382)
+	//CurveFp382_2 awaiting proper match
+	CurveFp382_2 = 0
+
+	Fp254_G1_Base_Seed = "Fp254_G1_Base_Seed"
+	Fp254_G2_Base_Seed = "Fp254_G2_Base_Seed"
+
+	// XXX missing GT
+
+	Fp382_1_G1_Base_Seed = "Fp382_1_G1_Base_Seed"
+	Fp382_1_G2_Base_Seed = "Fp382_1_G2_Base_Seed"
+
+	// XXX missing GT
+
+	Fp382_2_G1_Base_Seed = "Fp382_2_G1_Base_Seed"
+	Fp382_2_G2_Base_Seed = "Fp382_2_G2_Base_Seed"
+
+	// XXX missing GT
+	Fp254_G1_Base_Str = "replace with correct value"
+	Fp254_G2_Base_Str = "replace with correct value"
+
+	Fp382_1_G1_Base_Str = "replace with correct value"
+	Fp382_1_G2_Base_Str = "replace with correct value"
+
+	Fp382_2_G1_Base_Str = "replace with correct value"
+	Fp382_2_G2_Base_Str = "replace with correct value"
 )

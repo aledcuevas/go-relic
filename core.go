@@ -47,15 +47,3 @@ func epParamSetAny() int {
 	}
 	return StsOk
 }
-
-// *** TODO: Create an object that centralizes fields from ctx_t (e.g. arch, size of prime fields, etc.)***
-
-type goCore struct {
-	pcBytes   int
-	goArch    int
-	relicArch int
-}
-
-func setGoParameters() {
-	//TODO
-}
