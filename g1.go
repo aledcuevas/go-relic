@@ -59,7 +59,8 @@ import (
 )
 
 type pointG1 struct {
-	g1 C.ep_st
+	g1        C.ep_st
+	generator string
 }
 
 func newPointG1() *pointG1 {
@@ -211,7 +212,7 @@ func (p *pointG1) UnmarshalBinary(buff []byte) error {
 	// and pass a pointer to it.
 	b := C.CBytes(buff)
 	defer C.free(b)
-	C.ep_read_bin(&p.g1, (*C.uint8_t)(b), len)
+	C.g1_read_bin_w(&p.g1, (*C.uint8_t)(b), len)
 	//TODO: Implement error-checking functionality
 	return nil
 }

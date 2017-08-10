@@ -63,4 +63,10 @@ const (
 
 	// PcBytes (TEMPORARY) represents the size of bytes of a block sufficient to store a binary field element. Will later be migrated to goCore
 	PcBytes = int(C.FP_BYTES)
+	//CurveFp254BNb ...
+	CurveFp254BNb = int(C.BN_P254)
+	//CurveFp382_1 ...
+	CurveFp382_1 = int(C.BN_P382)
+	//CurveFp382_2 awaiting proper match
+	CurveFp382_2 = 0
 )
