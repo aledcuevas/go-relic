@@ -2,20 +2,55 @@ package main
 
 // #include <relic.h>
 /*
-void gt_free_w(fp12_t* gt){
-  gt_free(gt);
+void gt_free_w(gt_t* p){
+  gt_free(p);
+}
+void gt_null_w(gt_t* p){
+  gt_null(p);
+}
+void gt_new_w(gt_t* p){
+  gt_new(p);
+}
+void gt_rand_w(gt_t* p){
+  gt_rand(p);
+}
+int gt_cmp_w(gt_t* p, gt_t* q){
+  return gt_cmp(p,q);
 }
 */
 import "C"
+import kyber "gopkg.in/dedis/kyber.v1"
 
-type ellPointGT struct {
-	gt C.fp12_t
+type pointGT struct {
+	g C.gt_t
+	p *Pairing
 }
 
-// ******* GT METHODS *******
+func newPointGT(p *Pairing) *pointGT {
+	pg := new(pointG1)
+	C.gt_new_w(&pg.g)
+	//runtime.SetFinalizer(&pg.g, clear)
+	return pg
+}
 
-// // Initialization and Free
+func (p *pointGT) Pairing(p1, p2 kyber.Point) kyber.Point {
+	panic("missing implementation")
+}
 
-func freeGT(gt *C.fp12_t) {
-	C.gt_free_w(gt)
+func (p *pointGT) Equal(p2 kyber.Point) bool {
+	pg := q.(*pointGT)
+	i := C.gt_cmp_w(&p.g, &pg.g)
+	switch i {
+	case C.CMP_EQ:
+		return true
+	case C.CMP_NE:
+		return false
+	default:
+		panic("Error in C casting")
+	}
+}
+
+func (p *pointGT) Null() kyber.Point {
+	C.gt_null_w(&p.g)
+	return p
 }
