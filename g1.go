@@ -63,9 +63,10 @@ type pointG1 struct {
 	generator string
 }
 
-func newPointG1() *pointG1 {
+func newPointG1(gen string) *pointG1 {
 	pg := new(pointG1)
 	C.g1_new_w(&pg.g)
+	pg.generator = gen
 	//runtime.SetFinalizer(&pg.g, clear)
 	return pg
 }

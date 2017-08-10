@@ -56,6 +56,7 @@ import "C"
 import (
 	"crypto/cipher"
 	"encoding/hex"
+	"errors"
 	"io"
 
 	"gopkg.in/dedis/kyber.v1"
@@ -80,13 +81,13 @@ func (s *scalar) Zero() kyber.Scalar {
 }
 
 func (s *scalar) One() kyber.Scalar {
-	C.bn_null_w(&s.fe, 1)
+	C.bn_null_w(&s.fe)
 	return s
 }
 
 func (s *scalar) Equal(s2 kyber.Scalar) bool {
-	ss := s.(*scalar)
-	i := C.bn_cmp_w(&p.g, &pg.g)
+	sg := s2.(*scalar)
+	i := C.bn_cmp_w(&s.fe, &sg.fe)
 	switch i {
 	case C.CMP_EQ:
 		return true
@@ -98,7 +99,7 @@ func (s *scalar) Equal(s2 kyber.Scalar) bool {
 }
 
 func (s *scalar) Neg(s2 kyber.Scalar) kyber.Scalar {
-	C.bn_neg(&s.fe, &s2.fe)
+	C.bn_neg(&s.fe, &s2.(*scalar).fe)
 	return s
 }
 
@@ -143,19 +144,19 @@ func (s *scalar) SetInt64(i int64) kyber.Scalar {
 	//NOTE: WORD is a constant which is set depending on the processor's word size at
 	// compile time. It is important to check whether the WORD size is 64 to
 	// avoid errors.
-	C.bn_set_dig_w(&s.fe, C.int64_t(i))
+	C.bn_set_dig_w(&s.fe, C.int(i))
 	return s
 
 }
 
 func (s *scalar) Set(a kyber.Scalar) kyber.Scalar {
-	C.bn_copy_w(&s.fe, &a.fe)
+	C.bn_copy_w(&s.fe, &a.(*scalar).fe)
 	return s
 }
 
 func (s *scalar) Clone() kyber.Scalar {
 	s2 := NewScalar()
-	C.bn_copy_w(&s2.fe, &s.fe)
+	C.bn_copy_w(&s2.(*scalar).fe, &s.fe)
 	return s2
 }
 
@@ -193,7 +194,7 @@ func (s *scalar) UnmarshalBinary(buff []byte) error {
 	// and pass a pointer to it.
 	b := C.CBytes(buff)
 	defer C.free(b)
-	C.bn_read_bin_w(&p.g, (*C.uint8_t)(b), len)
+	C.bn_read_bin_w(&s.fe, (*C.uint8_t)(b), len)
 	//TODO: Implement error-checking functionality
 	return nil
 }
@@ -221,11 +222,12 @@ func (s *scalar) Bytes() []byte {
 func (s *scalar) Pick(rand cipher.Stream) kyber.Scalar {
 	//TODO: rand is currently not being used because RELIC randomizes a point
 	// by reference.
-	C.bn_rand_w(&p.g)
+	C.bn_rand_w(&s.fe, C.BN_POS, C.RELIC_BN_BITS)
+	return s
 }
 
 func (s *scalar) String() string {
-	buff, err := p.MarshalBinary()
+	buff, err := s.MarshalBinary()
 	if err != nil {
 		panic("Error in marshalling")
 	}
@@ -238,7 +240,7 @@ func clearScalar(s *scalar) {
 }
 
 func (s *scalar) SetVarTime(varTime bool) error {
-	return ErrVarTime
+	return errors.New("ErrVarTime")
 }
 
 // -- -- Helper Functions

@@ -59,12 +59,14 @@ import (
 )
 
 type pointG2 struct {
-	g C.ep2_st
+	g         C.ep2_st
+	generator string
 }
 
-func newPointG2() *pointG2 {
+func newPointG2(gen string) *pointG2 {
 	pg := new(pointG2)
 	C.g2_new_w(&pg.g)
+	pg.generator = gen
 	//runtime.SetFinalizer(&pg.g, clear)
 	return pg
 }
