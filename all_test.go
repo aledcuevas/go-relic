@@ -12,10 +12,11 @@ import (
  * NOTE: The if/else statements are ugly but did the job.
  ***/
 
-func TestMemory1(t *testing.T) {
-}
-
 func TestUtil1(t *testing.T) {
+	coreInit()
+	epParamSetAny()
+	defer coreClean()
+
 }
 
 // *** SUPPLEMENTARY FUNCTIONS ***
