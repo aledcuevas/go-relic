@@ -88,7 +88,6 @@ func (p *pointG1) Null() kyber.Point {
 	return p
 }
 
-//what is a standard base point? get any slice of bytes and put in a curve ep_map
 func (p *pointG1) Base() kyber.Point {
 	//get a base
 	panic("not implemented")
@@ -115,7 +114,7 @@ func (p *pointG1) Neg(p1 kyber.Point) kyber.Point {
 }
 
 func (p *pointG1) Mul(s kyber.Scalar, p1 kyber.Point) kyber.Point {
-	//Waiting for a scalar implementation
+	//TODO: Waiting for a scalar implementation
 	return p
 }
 
@@ -123,33 +122,25 @@ func (p *pointG1) Clone() kyber.Point {
 	p2 := new(pointG1)
 	C.g1_new_w(&p2.g)
 	C.g1_copy_w(&p2.g, &p.g)
-	// what is this? casting? how does it work?
 	return p2
 }
 
-//is this just to return a byte representation of p?
+//******TODO******
 func (p *pointG1) Data() ([]byte, error) {
 	panic("not implemented")
 }
 
-//what is this?
 func (p *pointG1) EmbedLen() int {
 	panic("not implemented")
 }
 
-//what is this?
 func (p *pointG1) Embed(data []byte, rand cipher.Stream) kyber.Point {
 	panic("not implemented")
 }
 
-func (p *pointG1) Pick(rand cipher.Stream) kyber.Point {
-	//TODO: rand is currently not being used because RELIC randomizes a point
-	// by reference.
-	C.g1_rand_w(&p.g)
-	return p
-}
+//***************
 
-func (p *pointG1) PickR() kyber.Point {
+func (p *pointG1) Pick(rand cipher.Stream) kyber.Point {
 	//TODO: rand is currently not being used because RELIC randomizes a point
 	// by reference.
 	C.g1_rand_w(&p.g)
