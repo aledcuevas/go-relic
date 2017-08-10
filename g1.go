@@ -59,20 +59,20 @@ import (
 )
 
 type pointG1 struct {
-	g1        C.ep_st
+	g         C.ep_st
 	generator string
 }
 
 func newPointG1() *pointG1 {
-	pg1 := new(pointG1)
-	C.g1_new_w(&pg1.g1)
-	//runtime.SetFinalizer(&pg1.g1, clear)
-	return pg1
+	pg := new(pointG1)
+	C.g1_new_w(&pg.g)
+	//runtime.SetFinalizer(&pg.g, clear)
+	return pg
 }
 
 func (p *pointG1) Equal(q kyber.Point) bool {
 	pg := q.(*pointG1)
-	i := C.g1_cmp_w(&p.g1, &pg.g1)
+	i := C.g1_cmp_w(&p.g, &pg.g)
 	switch i {
 	case C.CMP_EQ:
 		return true
@@ -84,7 +84,7 @@ func (p *pointG1) Equal(q kyber.Point) bool {
 }
 
 func (p *pointG1) Null() kyber.Point {
-	C.g1_null_w(&p.g1)
+	C.g1_null_w(&p.g)
 	return p
 }
 
@@ -97,20 +97,20 @@ func (p *pointG1) Base() kyber.Point {
 func (p *pointG1) Add(p1, p2 kyber.Point) kyber.Point {
 	pg1 := p1.(*pointG1)
 	pg2 := p2.(*pointG1)
-	C.g1_add_w(&p.g1, &pg1.g1, &pg2.g1)
+	C.g1_add_w(&p.g, &pg1.g, &pg2.g)
 	return p
 }
 
 func (p *pointG1) Sub(p1, p2 kyber.Point) kyber.Point {
 	pg1 := p1.(*pointG1)
 	pg2 := p2.(*pointG1)
-	C.g1_sub_w(&p.g1, &pg1.g1, &pg2.g1)
+	C.g1_sub_w(&p.g, &pg1.g, &pg2.g)
 	return p
 }
 
 func (p *pointG1) Neg(p1 kyber.Point) kyber.Point {
-	pg1 := p1.(*pointG1)
-	C.g1_neg_w(&p.g1, &pg1.g1)
+	pg := p1.(*pointG1)
+	C.g1_neg_w(&p.g, &pg.g)
 	return p
 }
 
@@ -121,8 +121,8 @@ func (p *pointG1) Mul(s kyber.Scalar, p1 kyber.Point) kyber.Point {
 
 func (p *pointG1) Clone() kyber.Point {
 	p2 := new(pointG1)
-	C.g1_new_w(&p2.g1)
-	C.g1_copy_w(&p2.g1, &p.g1)
+	C.g1_new_w(&p2.g)
+	C.g1_copy_w(&p2.g, &p.g)
 	// what is this? casting? how does it work?
 	return p2
 }
@@ -145,20 +145,20 @@ func (p *pointG1) Embed(data []byte, rand cipher.Stream) kyber.Point {
 func (p *pointG1) Pick(rand cipher.Stream) kyber.Point {
 	//TODO: rand is currently not being used because RELIC randomizes a point
 	// by reference.
-	C.g1_rand_w(&p.g1)
+	C.g1_rand_w(&p.g)
 	return p
 }
 
 func (p *pointG1) PickR() kyber.Point {
 	//TODO: rand is currently not being used because RELIC randomizes a point
 	// by reference.
-	C.g1_rand_w(&p.g1)
+	C.g1_rand_w(&p.g)
 	return p
 }
 
 func (p *pointG1) Set(p2 kyber.Point) kyber.Point {
 	pg2 := p2.(*pointG1)
-	C.g1_copy_w(&p.g1, &pg2.g1)
+	C.g1_copy_w(&p.g, &pg2.g)
 	return p
 }
 
@@ -189,7 +189,7 @@ func (p *pointG1) MarshalBinary() ([]byte, error) {
 	b := C.CBytes(buff)
 	defer C.free(b)
 	//We perform the write operation on the C array, which has to be casted to match the signature
-	C.g1_write_bin_w((*C.uint8_t)(b), clen, &p.g1, pack)
+	C.g1_write_bin_w((*C.uint8_t)(b), clen, &p.g, pack)
 	//We transform the unsafe.Pointer back to a []byte
 	//GoBytes takes C data with explicity length and returns Go []byte
 	copy(buff, C.GoBytes(b, clen))
@@ -212,7 +212,7 @@ func (p *pointG1) UnmarshalBinary(buff []byte) error {
 	// and pass a pointer to it.
 	b := C.CBytes(buff)
 	defer C.free(b)
-	C.g1_read_bin_w(&p.g1, (*C.uint8_t)(b), len)
+	C.g1_read_bin_w(&p.g, (*C.uint8_t)(b), len)
 	//TODO: Implement error-checking functionality
 	return nil
 }
@@ -224,7 +224,7 @@ func (p *pointG1) UnmarshalFrom(r io.Reader) (int, error) {
 func (p *pointG1) MarshalSize() int {
 	//Point compression flag
 	pack := C.int(0)
-	return int(C.g1_size_bin_w(&p.g1, pack))
+	return int(C.g1_size_bin_w(&p.g, pack))
 }
 
 // -- -- -- -- Helper functions
